@@ -32,28 +32,8 @@
 		window.location.href = "/bff/login"
 	}
 
-	const local = async () => {
-		try {
-			const response = await fetch(
-				new Request("/local/identity", {
-					headers: new Headers({
-						"X-CSRF": "1"
-					})
-				})
-			)
-			let data
-			if (response.ok) {
-				data = await response.json()
-				console.log("user logged int", userClaims.value)
-			}
-			console.log("local API result:", response.status, data)
-		} catch (e) {
-			console.log("error checking user status")
-		}
-	}
-
-	const remote = async () => {
-		console.log("calling remote")
+	const api = async () => {
+		console.log("calling API")
 		try {
 			const response = await fetch(
 				new Request("/api/weatherForecast", {
@@ -63,11 +43,11 @@
 				})
 			)
 			let data
+			console.log("API status:", response.status)
 			if (response.ok) {
 				data = await response.json()
-				console.log("user logged int", userClaims.value)
+				console.log("API result", data)
 			}
-			console.log("remote API result:", response.status, data)
 		} catch (e) {
 			console.log("error checking user status")
 		}
@@ -91,13 +71,12 @@
 		</a>
 	</div>
 	<HelloWorld msg="Vite + Vue" />
-	<router-link :to="{ name: 'About' }">About</router-link>
+	<router-link :to="{ name: 'About' }">Go to About</router-link>
 	<RouterView></RouterView>
 
 	<div>
 		<button type="button" @click="login">Login</button>
-		<button type="button" @click="local">Local</button>
-		<button type="button" @click="remote">Remote</button>
+		<button type="button" @click="api">Call API</button>
 		<button type="button" @click="logout">Logout</button>
 	</div>
 	<pre style="text-align: left">{{ userClaims }}</pre>
