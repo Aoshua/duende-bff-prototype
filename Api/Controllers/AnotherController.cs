@@ -9,9 +9,6 @@ namespace Api.Controllers
     public class AnotherController : ControllerBase
     {
         [HttpGet]
-        public string Get()
-        {
-            return "This is the result of AnotherController";
-        }
+        public string Get() =>  "This is the result of AnotherController";
     }
 }
