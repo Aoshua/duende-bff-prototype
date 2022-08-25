@@ -32,8 +32,8 @@
 		window.location.href = "/bff/login"
 	}
 
-	const api = async () => {
-		console.log("calling API")
+	const weather = async () => {
+		console.log("getting weather...")
 		try {
 			const response = await fetch(
 				new Request("/api/weatherForecast", {
@@ -43,13 +43,34 @@
 				})
 			)
 			let data
-			console.log("API status:", response.status)
+			console.log("Request status:", response.status)
 			if (response.ok) {
 				data = await response.json()
-				console.log("API result", data)
+				console.log("Weather result", data)
 			}
 		} catch (e) {
-			console.log("error checking user status")
+			console.log("error", e)
+		}
+	}
+
+	const another = async () => {
+		console.log("getting another")
+		try {
+			const response = await fetch(
+				new Request("/api/another", {
+					headers: new Headers({
+						"X-CSRF": "1"
+					})
+				})
+			)
+			let data
+			console.log("Request status:", response.status)
+			if (response.ok) {
+				data = await response.text()
+				console.log("Another result", data)
+			}
+		} catch (e) {
+			console.log("error", e)
 		}
 	}
 
@@ -76,7 +97,8 @@
 
 	<div>
 		<button type="button" @click="login">Login</button>
-		<button type="button" @click="api">Call API</button>
+		<button type="button" @click="weather">Get Weather</button>
+		<button type="button" @click="another">Get Another</button>
 		<button type="button" @click="logout">Logout</button>
 	</div>
 	<pre style="text-align: left">{{ userClaims }}</pre>
