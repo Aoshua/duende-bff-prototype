@@ -1,0 +1,55 @@
+﻿@page
+@model IdentityServer.Pages.Tenants.TenantsGrid.IndexModel
+
+<table class="table table-fit table-hover bg-white">
+    <thead>
+        <tr>
+            <th scope="col">Id</th>
+            <th style="width: 40%;" scope="col">Name</th>
+            <th scope="col">User Count</th>
+            <th style="width: 80px;" scope="col">
+                <div class="d-flex justify-content-end">
+                    <button class="btn btn-success btn-sm" data-bs-toggle="modal" data-bs-target="#createTenantModal">New</button>
+                </div>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tenant in Model.View.AllTenants)
+        {
+            <tr>
+                <td>@tenant.Id</td>
+                <td>@tenant.Name</td>
+                <td>@tenant.Users.Count</td>
+                <td>
+                    <div class="d-flex flex-row">
+                        <button class="btn btn-primary btn-sm me-2">Manage</button>
+                        <button class="btn btn-danger btn-sm">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal fade" id="createTenantModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Create New Tenant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-6">
+                        <input type="text" class="form-control" placeholder="Tenant Name" aria-label="First name">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Create Tenant</button>
+            </div>
+        </div>
+    </div>
+</div>

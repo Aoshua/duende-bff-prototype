@@ -1,0 +1,9 @@
+﻿@page
+@model IdentityServer.Pages.Zoho.ZohoIntegration.IndexModel
+
+
+
+@foreach(var customer in Model.View.Customers) 
+{
+    <div>@customer.customer_name</div>
+}

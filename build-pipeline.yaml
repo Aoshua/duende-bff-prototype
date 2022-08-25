@@ -1,0 +1,109 @@
+# Build API artifact.
+
+trigger:
+    branches:
+        include:
+            - dev-staging
+pr: none
+
+pool:
+    vmImage: "windows-2022"
+
+steps:
+    - task: NuGetToolInstaller@1
+      displayName: Install NuGet Tools
+
+    - task: NuGetCommand@2
+      displayName: Restore NuGet Packages
+      inputs:
+          restoreSolution: "$(System.DefaultWorkingDirectory)/Unify.Identity/Unify.Identity.csproj"
+
+    - task: DotNetCoreCLI@2
+      displayName: Build for Release
+      inputs:
+          command: publish
+          publishWebProjects: false
+          projects: "$(System.DefaultWorkingDirectory)/Unify.Identity/Unify.Identity.csproj"
+          arguments: '--configuration Release --output "$(Build.ArtifactStagingDirectory)/App"'
+          zipAfterPublish: true
+
+    - task: PublishPipelineArtifact@1
+      displayName: Publish Artifact
+      inputs:
+          targetPath: "$(Build.ArtifactStagingDirectory)/App"
+          artifactName: "UnifyIdentity"
+# # Build API artifact.
+
+# trigger:
+#     branches:
+#         include:
+#             - dev-staging
+# pr: none
+
+# pool:
+#     vmImage: "windows-2022"
+
+# variables:
+#     - name: projDirectory
+#       value: "$(System.DefaultWorkingDirectory)/Unify.Identity/Unify.Identity.csproj"
+
+# jobs:
+#     ##
+#     # 1. Build API artifact
+#     ##
+#     - job: "API"
+#       steps:
+#           - task: NuGetToolInstaller@1
+#             displayName: Install NuGet Tools
+
+#           - task: NuGetCommand@2
+#             displayName: Restore NuGet Packages
+#             inputs:
+#                 restoreSolution: $(projDirectory)
+
+#           - task: DotNetCoreCLI@2
+#             displayName: Build for Release
+#             inputs:
+#                 command: publish
+#                 publishWebProjects: false
+#                 projects: $(projDirectory)
+#                 arguments: '--configuration Release --output "$(Build.ArtifactStagingDirectory)/App"'
+#                 zipAfterPublish: true
+
+#           - task: PublishPipelineArtifact@1
+#             displayName: Publish Artifact
+#             inputs:
+#                 targetPath: "$(Build.ArtifactStagingDirectory)/App"
+#                 artifactName: "UnifyIdentity"
+
+#     ##
+#     # 2. Build Migrations Artifact
+#     ##
+#     - job: "Migrations"
+#       steps:
+#           - task: DotNetCoreCLI@2
+#             displayName: New Manifest for tool (Migrations)
+#             inputs:
+#                 command: custom
+#                 custom: "new "
+#                 arguments: tool-manifest
+
+#           - task: DotNetCoreCLI@2
+#             displayName: Install EF Tool (Migrations)
+#             inputs:
+#                 command: custom
+#                 custom: tool
+#                 arguments: install dotnet-ef
+
+#           - task: DotNetCoreCLI@2
+#             displayName: Create SQL Scripts (Migrations)
+#             inputs:
+#                 command: custom
+#                 custom: "ef "
+#                 arguments: migrations script --output $(Build.SourcesDirectory)/SQL/dbScript.sql --idempotent --project $(projDirectory) --context UnifyIdentityDbContext
+
+#           - task: PublishBuildArtifacts@1
+#             displayName: Publish SQLScripts Artifact (Migrations)
+#             inputs:
+#                 PathtoPublish: $(Build.SourcesDirectory)/SQL/dbScript.sql
+#                 ArtifactName: SQLScripts
