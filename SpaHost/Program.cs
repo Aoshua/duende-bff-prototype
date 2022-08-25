@@ -79,8 +79,18 @@ app.UseEndpoints(endpoints =>
 
     endpoints.MapRemoteBffApiEndpoint("/api", "https://localhost:6001")
         .RequireAccessToken(Duende.Bff.TokenType.User);
-
-    endpoints.MapFallbackToFile("index.html");
 });
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseSpa(spa =>
+    {
+        spa.UseProxyToSpaDevelopmentServer("https://127.0.0.1:5173");
+    });
+}
+else
+{
+    app.MapFallbackToFile("index.html");
+}
 
 app.Run();
