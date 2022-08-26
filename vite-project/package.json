@@ -6,7 +6,8 @@
 	"scripts": {
 		"dev": "vite",
 		"build": "vue-tsc --noEmit && vite build --emptyOutDir",
-		"preview": "vite preview"
+		"preview": "vite preview",
+		"sync": "python syncApiProxy.py"
 	},
 	"dependencies": {
 		"vue": "^3.2.37",
