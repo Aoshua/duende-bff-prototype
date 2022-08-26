@@ -9,8 +9,8 @@ builder.Services.AddBff()
 
 // For recommendations see:
 // https://docs.duendesoftware.com/identityserver/v6/bff/session/handlers/#the-openid-connect-authentication-handler
-builder.Services.AddAuthentication(
-    options =>
+builder.Services
+    .AddAuthentication(options =>
     {
         options.DefaultScheme = "cookie";
         options.DefaultChallengeScheme = "oidc";
@@ -40,8 +40,6 @@ builder.Services.AddAuthentication(
         // Query response type is compatible with strict SameSite mode
         options.ResponseMode = "query";
 
-        options.Scope.Add("api");
-
         // Save tokens into authentication session
         // to enable automatic token management
         options.SaveTokens = true;
@@ -62,8 +60,11 @@ builder.Services.AddAuthentication(
 
 var app = builder.Build();
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
+if (app.Environment.IsProduction())
+{
+    app.UseDefaultFiles();
+    app.UseStaticFiles();
+}
 
 app.UseRouting();
 app.UseAuthentication();
@@ -82,15 +83,7 @@ app.UseEndpoints(endpoints =>
 });
 
 if (app.Environment.IsDevelopment())
-{
-    app.UseSpa(spa =>
-    {
-        spa.UseProxyToSpaDevelopmentServer("https://127.0.0.1:5173");
-    });
-}
-else
-{
-    app.MapFallbackToFile("index.html");
-}
+    app.UseSpa(spa =>spa.UseProxyToSpaDevelopmentServer("https://127.0.0.1:5173"));
+else app.MapFallbackToFile("index.html");
 
 app.Run();

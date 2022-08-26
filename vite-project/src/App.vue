@@ -92,7 +92,7 @@
 		</a>
 	</div>
 	<HelloWorld msg="Vite + Vue" />
-	<router-link :to="{ name: 'About' }">Go to About</router-link>
+	<router-link :to="{ name: 'About' }">About Page</router-link>
 	<RouterView></RouterView>
 
 	<div>
